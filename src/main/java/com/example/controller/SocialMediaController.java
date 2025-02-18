@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.service.AccountService;
+import com.example.service.MessageService;
 import com.example.entity.Account;
+import com.example.entity.Message;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -19,6 +21,9 @@ public class SocialMediaController {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private MessageService messageService;
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Account account) {
@@ -46,4 +51,13 @@ public class SocialMediaController {
         }
     }
 
+    @PostMapping("/messages")
+    public ResponseEntity<?> createMessage(@RequestBody Message message) {
+        try {
+            Message newMessage = messageService.createMessage(message);
+            return ResponseEntity.ok(newMessage);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }
