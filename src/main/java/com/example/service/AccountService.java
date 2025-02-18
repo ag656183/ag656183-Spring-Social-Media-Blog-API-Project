@@ -24,4 +24,13 @@ public class AccountService {
         Account newAccount = new Account(username, password);
         return accountRepository.save(newAccount);
     }
+
+    public Account loginUser(String username, String password) {
+        Account existingAccount = accountRepository.findByUsername(username);
+
+        if(existingAccount == null || !existingAccount.getPassword().equals(password)) {
+            return null;
+        }
+        return existingAccount;
+    }
 }

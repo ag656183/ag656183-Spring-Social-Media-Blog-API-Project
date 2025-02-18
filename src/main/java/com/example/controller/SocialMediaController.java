@@ -32,4 +32,18 @@ public class SocialMediaController {
             return ResponseEntity.status(409).body(e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody Account account) {
+        try {
+            Account existingAccount = accountService.loginUser(account.getUsername(), account.getPassword());
+            if (existingAccount == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            }
+            return ResponseEntity.ok(existingAccount);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
 }
