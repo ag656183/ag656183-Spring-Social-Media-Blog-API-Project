@@ -52,18 +52,15 @@ public class MessageService {
     }
 
     public int updateMessageText(int messageId, String newMessageText) {
-        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
+        Optional<Message> message = messageRepository.findById(messageId);
+        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255 || message.isEmpty()) {
             return 0;
         }
-    
-        Optional<Message> message = messageRepository.findById(messageId);
-        if (message.isPresent()) {
-            Message existingMessage = message.get();
-            existingMessage.setMessageText(newMessageText);
-            messageRepository.save(existingMessage);
-            return 1;
-        }
-        return 0; 
+
+        Message existingMessage = message.get();
+        existingMessage.setMessageText(newMessageText);
+        messageRepository.save(existingMessage);
+        return 1;
     }
 
     public List<Message> getMessagesByPostedBy(int postedBy) {

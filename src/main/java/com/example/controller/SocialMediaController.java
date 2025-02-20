@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.websocket.server.PathParam;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +86,7 @@ public class SocialMediaController {
     public ResponseEntity<?> deleteMessageById(@PathVariable int messageId) {
         int rowsDeleted = messageService.deleteMessageById(messageId);
 
-        if(rowsDeleted == 1) {
+        if (rowsDeleted == 1) {
             return ResponseEntity.ok(1);
         }
         return ResponseEntity.ok().build();
@@ -96,16 +94,16 @@ public class SocialMediaController {
 
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<?> updateMessageText(@PathVariable int messageId, @RequestBody String newMessageText) {
-        if (newMessageText == null || newMessageText.trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
+        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
+            System.out.println("Invalid message: " + newMessageText);
+            return ResponseEntity.status(400).build();
         }
         
         int rowsUpdated = messageService.updateMessageText(messageId, newMessageText);
-    
         if (rowsUpdated == 1) {
             return ResponseEntity.ok(1);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(400).build();
     }
 
     @GetMapping("/accounts/{accountId}/messages")

@@ -14,7 +14,7 @@ public class AccountService {
 
     public Account registerUser(String username, String password) {
         if (username == null || username.trim().isEmpty() || password.length() < 4) {
-            return null; // Invalid input
+            return null;
         }
 
         if (accountRepository.existsByUsername(username)) {
