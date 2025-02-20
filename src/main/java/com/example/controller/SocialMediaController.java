@@ -84,4 +84,33 @@ public class SocialMediaController {
         return message.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok().build());
     }
 
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<?> deleteMessageById(@PathVariable int messageId) {
+        int rowsDeleted = messageService.deleteMessageById(messageId);
+
+        if(rowsDeleted == 1) {
+            return ResponseEntity.ok(1);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/messages/{messageId}")
+    public ResponseEntity<?> updateMessageText(@PathVariable int messageId, @RequestBody String newMessageText) {
+        if (newMessageText == null || newMessageText.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        int rowsUpdated = messageService.updateMessageText(messageId, newMessageText);
+    
+        if (rowsUpdated == 1) {
+            return ResponseEntity.ok(1);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/accounts/{accountId}/messages")
+    public ResponseEntity<List<Message>> getMessageByUser(@PathVariable int accountId) {
+        List<Message> messages = messageService.getMessagesByPostedBy(accountId);
+        return ResponseEntity.ok(messages);
+    }
 }

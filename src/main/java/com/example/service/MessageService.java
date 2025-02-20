@@ -6,20 +6,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.entity.Account;
 import com.example.entity.Message;
-import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final AccountRepository accountRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, AccountRepository accountRepository) {
+    public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
-        this.accountRepository = accountRepository;
     }
 
     public Message createMessage(Message message) {
@@ -31,7 +27,7 @@ public class MessageService {
             throw new IllegalArgumentException("Message text must not be blank and should be less than 255 characters");
         }
 
-        if(!messageRepository.existsById(postedById)) {
+        if (!messageRepository.existsById(postedById)) {
             throw new IllegalArgumentException("User does not exist");
         }
         
@@ -45,5 +41,32 @@ public class MessageService {
 
     public Optional<Message> getMessageById(int messageId) {
         return messageRepository.findById(messageId);
+    }
+
+    public int deleteMessageById(int messageId) {
+        if (messageRepository.existsById(messageId)) {
+            messageRepository.deleteById(messageId);
+            return 1;
+        }
+        return 0;
+    }
+
+    public int updateMessageText(int messageId, String newMessageText) {
+        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
+            return 0;
+        }
+    
+        Optional<Message> message = messageRepository.findById(messageId);
+        if (message.isPresent()) {
+            Message existingMessage = message.get();
+            existingMessage.setMessageText(newMessageText);
+            messageRepository.save(existingMessage);
+            return 1;
+        }
+        return 0; 
+    }
+
+    public List<Message> getMessagesByPostedBy(int postedBy) {
+        return messageRepository.findMessagesByPostedBy(postedBy);
     }
 }
