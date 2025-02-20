@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.service.AccountService;
 import com.example.service.MessageService;
+
 import com.example.entity.Account;
 import com.example.entity.Message;
 
@@ -63,5 +65,11 @@ public class SocialMediaController {
             Map<String, String> errorResponse = new HashMap<>();
             return ResponseEntity.status(400).body(errorResponse);
         }
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.ok(messages);
     }
 }
