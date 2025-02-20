@@ -2,6 +2,10 @@ package com.example.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.websocket.server.PathParam;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,4 +76,12 @@ public class SocialMediaController {
         List<Message> messages = messageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
+
+    @GetMapping("/messages/{messageId}")
+    public ResponseEntity<?> getMessageById(@PathVariable int messageId) {
+        Optional<Message> message = messageService.getMessageById(messageId);
+
+        return message.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok().build());
+    }
+
 }
