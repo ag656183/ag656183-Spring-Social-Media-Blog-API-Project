@@ -22,12 +22,16 @@ public class MessageService {
     public Message createMessage(Message message) {
         String messageText = message.getMessageText();
         int postedById = message.getPostedBy();
+        long timePostedEpoch = message.getTimePostedEpoch();
 
-        if(messageText == null || messageText.trim().isEmpty() || messageText.length() > 255) {
+        if (messageText == null || messageText.trim().isEmpty() || messageText.length() > 255) {
             throw new IllegalArgumentException("Message text must not be blank and should be less than 255 characters");
         }
+
+        if(!messageRepository.existsById(postedById)) {
+            throw new IllegalArgumentException("User does not exist");
+        }
         
-        long timePostedEpoch = System.currentTimeMillis();
         Message newMessage = new Message(postedById, messageText, timePostedEpoch);
         return messageRepository.save(newMessage);
         }

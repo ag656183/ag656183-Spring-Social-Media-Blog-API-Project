@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +60,8 @@ public class SocialMediaController {
             Message newMessage = messageService.createMessage(message);
             return ResponseEntity.ok(newMessage);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            return ResponseEntity.status(400).body(errorResponse);
         }
     }
 }
