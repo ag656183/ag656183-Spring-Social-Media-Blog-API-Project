@@ -53,7 +53,7 @@ public class MessageService {
 
     public int updateMessageText(int messageId, String newMessageText) {
         Optional<Message> message = messageRepository.findById(messageId);
-        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255 || message.isEmpty()) {
+        if (message.isEmpty()) {
             return 0;
         }
 

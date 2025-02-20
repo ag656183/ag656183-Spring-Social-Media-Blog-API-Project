@@ -93,17 +93,17 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<?> updateMessageText(@PathVariable int messageId, @RequestBody String newMessageText) {
-        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
-            System.out.println("Invalid message: " + newMessageText);
-            return ResponseEntity.status(400).build();
+    public ResponseEntity<?> updateMessageText(@PathVariable int messageId, @RequestBody Message newMessage) {
+        String newMessageText = newMessage.getMessageText();
+        if (newMessageText == null || newMessageText.isEmpty() || newMessageText.length() > 255) {
+            return ResponseEntity.badRequest().build();
         }
         
         int rowsUpdated = messageService.updateMessageText(messageId, newMessageText);
         if (rowsUpdated == 1) {
             return ResponseEntity.ok(1);
         }
-        return ResponseEntity.status(400).build();
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/accounts/{accountId}/messages")
